@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
-import { createReducer } from '@reduxjs/toolkit';
+import { createAction } from '@reduxjs/toolkit';
 
-export const addContact = createReducer(
+export const addContact = createAction(
   'contacts/addContact',
   (nameText, numberText) => {
     return {
@@ -14,5 +14,5 @@ export const addContact = createReducer(
     };
   }
 );
-export const delContact = createReducer('contacts/deleteContact');
-export const setFilter = createReducer('filter/setFilter');
+export const delContact = createAction('contacts/deleteContact');
+export const setFilter = createAction('filter/setFilter');
