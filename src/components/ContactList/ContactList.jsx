@@ -1,32 +1,30 @@
-import propTypes from 'prop-types';
-import css from './ContactList.module.css';
+import { ContactListStyle, ContactItemStyle } from "./ContactList.styled"
+import { ButtonStyle } from 'components/App.styled';
+import { getFilter } from "components/redux/filterSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { delContact, getPhoneBookValue } from "components/redux/phoneBookSlice";
 
-export const ContactList = ({ contacts, handleDelete }) => (
-  <div className={css.wraperContactList}>
-    <ul className={css.contactList}>
-      {contacts.map((contact, id) => (
-        <li key={id} className={css.contactListItem}>
-          {contact.name}: {contact.number}
-          <button
-            type="button"
-            className={css.contactListItemBtn}
-            onClick={() => handleDelete(contact.id)}
-          >
-            Delete
-          </button>
-        </li>
-      ))}
-    </ul>
-  </div>
-);
+export const ContactsList = () => {
+    const dispatch = useDispatch();
 
-ContactList.propTypes = {
-  contacts: propTypes.arrayOf(
-    propTypes.exact({
-      id: propTypes.string.isRequired,
-      name: propTypes.string.isRequired,
-      number: propTypes.string.isRequired,
-    })
-  ),
-  handleDelete: propTypes.func.isRequired,
+    const phoneBook = useSelector(getPhoneBookValue);
+    const filterPhoneBook = useSelector(getFilter);
+
+    const lowerFilter = filterPhoneBook.toLowerCase();
+    const visibleContacts = phoneBook.filter(({ name }) =>
+        (name.toLowerCase().includes(lowerFilter)));
+  
+    const deleteContact = (contactId) => {
+        dispatch(delContact(contactId))
+    };
+    
+    return (
+        <ContactListStyle>
+            {visibleContacts.map(({ name, number, id }) => (
+                <ContactItemStyle key={id}>
+                    <p>{name}: {number}</p>
+                    <ButtonStyle type="button" onClick={() => deleteContact(id)}>Delete</ButtonStyle>
+                </ContactItemStyle>))}
+        </ContactListStyle>
+    );
 };
